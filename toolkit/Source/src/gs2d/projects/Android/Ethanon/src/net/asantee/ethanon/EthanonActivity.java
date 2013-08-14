@@ -22,7 +22,10 @@
 
 package net.asantee.ethanon;
 
+import net.asantee.ethanon.banner.Banner;
+import net.asantee.ethanon.banner.BannerActivity;
 import net.asantee.gs2d.GS2DActivity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -31,14 +34,16 @@ import android.os.Bundle;
 public class EthanonActivity extends GS2DActivity {
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {		
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setSensorOrientation();
+		exampleUseBanner();
 	}
 
 	private void setSensorOrientation() {
 		try {
-			int screenOrientation = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_ACTIVITIES).activities[0].screenOrientation;
+			int screenOrientation = getPackageManager().getPackageInfo(
+					getPackageName(), PackageManager.GET_ACTIVITIES).activities[0].screenOrientation;
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 				if (screenOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
 					setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
@@ -48,5 +53,14 @@ public class EthanonActivity extends GS2DActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void exampleUseBanner() {
+		new Thread(){
+			public void run() {
+				while (!Banner.hasBannerAvailable());
+				Banner.getLastBanner().show();
+			}
+		}.start();
 	}
 }
